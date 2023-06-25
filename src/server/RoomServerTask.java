@@ -48,11 +48,12 @@ public class RoomServerTask {
 	}
 	
 	private void handlegameRoomSocket() {
-        // 클라이언트와 통신할 입출력 스트림 초기화
+        // 스레드 풀로 관리
 		ServerController.serverPool.submit(new Runnable() {
 			@Override
 			public void run() {
 				try {
+					// 클라이언트와 통신할 입출력 스트림 초기화
 					reader = new BufferedReader(new InputStreamReader(gameRoomSocket.getInputStream()));
 					writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(gameRoomSocket.getOutputStream())), true);
 
@@ -157,8 +158,10 @@ public class RoomServerTask {
 					} catch (IOException e) {
 					}
 				}
+				
 				masterTask.getRoomUserList().remove(roomMember);
 				
+				// 대기실에 방 목록에서 현재 방을 지우고 방 목록 갱신
 				if (masterTask.getRoomUserList().size() == 0) {
 					ServerController.sc.roomList.remove(roomName);
 					String sendData = "";
@@ -170,6 +173,7 @@ public class RoomServerTask {
 						masterTask.broadCast("roomList", sendData);
 						return;
 					}
+					// 만약 방이 없으면 그냥 싹 지움
 					masterTask.broadCast("roomListClear", "clear");
 				}
 			}// run

@@ -193,8 +193,6 @@ public class ServerTask implements Runnable {
     
     /**
      * 게임 내 사용자들에게만 메시지 전달
-     * @param code
-     * @param msg
      */
     public void roomBroadCast(String code, String msg) {
 		for(PrintWriter p : roomUserList.values()) {
@@ -204,8 +202,6 @@ public class ServerTask implements Runnable {
     
     /**
      * 게임 내 사용자중 나를 제외하고 메시지 전달
-     * @param code
-     * @param msg
      */
     public void roomBroadXY(String code, String msg) {
 		for(PrintWriter p : roomUserList.values()) {
@@ -216,9 +212,7 @@ public class ServerTask implements Runnable {
 	}
     
     /**
-     * 대기실 내 모든 사용자에게 메시지 전달
-     * @param code
-     * @param msg
+     * 대기실 내 모든 사용자에게 메시지 전달     
      */
     public void broadCast(String code, String msg) {
 		for(PrintWriter p : ServerController.sc.clients.values()) {
@@ -226,9 +220,7 @@ public class ServerTask implements Runnable {
 		}
 	}
 	/**
-	 * 메시지를 보내온 클라이언트를 제외하고 다른 클라이언트들에 데이터 전달
-	 * @param code
-	 * @param msg
+	 * 메시지를 보내온 클라이언트를 제외하고 다른 클라이언트들에 데이터 전달	 
 	 */
 	public void broadXY(String code, String msg) {
 		for(PrintWriter p : ServerController.sc.clients.values()) {
@@ -250,13 +242,14 @@ public class ServerTask implements Runnable {
             
             // 소캣이 생성되면 포트번호를 사용자에게 전송
             clientWriter.println("port|"+ServerController.roomPort);
-            // 클라이언트 접속 대기
+            
+            // 스레드 풀로 관리
             Runnable run = new Runnable() {
-
 				@Override
 				public void run() {
 					try {
 	                    while (true) {
+	                    	// 클라이언트 접속 대기
 	                        Socket client = roomServer.accept();
 	                        new RoomServerTask(client, ServerTask.this);
 	                    }

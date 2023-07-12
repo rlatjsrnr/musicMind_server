@@ -130,6 +130,7 @@ public class RoomServerTask {
 						// 방 만들기 과정 중 데이터 전달
 						}else if(code.equals("roomName")) {
 							ServerController.sc.roomList.put(text, ServerController.roomPort);
+							masterTask.setRoomName(text);
 		            		String sendData = "";
 		            		roomName = text;
 		            		for(String s : ServerController.sc.roomList.keySet()) {
